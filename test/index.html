@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> shared memory test </title>
+</head>
+<body>
+    <pre></pre>
+    <script>
+    (async function init() {
+        let memory = new WebAssembly.Memory({ initial: 2, maximum: 2, shared: true });
+
+        const { instance } = await WebAssembly.instantiateStreaming(
+            fetch("main.wasm"), {
+            env : {
+                memory
+            },
+        });
+
+        const worker = new Worker("worker.js");
+        worker.postMessage(memory);
+
+        let pre = document.querySelector("pre");
+        function draw() {
+            requestAnimationFrame(draw);
+            pre.innerText = "update count: " + instance.exports.readCount();
+        }
+        requestAnimationFrame(draw);
+    })();
+    </script>
+</body>
+</html>

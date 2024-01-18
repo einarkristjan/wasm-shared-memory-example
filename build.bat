@@ -1,0 +1,11 @@
+clang main.c ^
+-o test/main.wasm ^
+--target=wasm32 ^
+--no-standard-libraries ^
+-Wl,--export-all ^
+-Wl,--no-entry ^
+-Wl,--import-memory ^
+-Wl,--shared-memory ^
+-mbulk-memory ^
+-matomics ^
+-O3
